@@ -1,6 +1,6 @@
 # HavaQualityApp - Gerçek Zamanlı Hava Kirliliği İzleme Platformu
 
-Bu proje, Kartaca "Çekirdekten Yetişenler Programı" kapsamında geliştirilen, dünya genelinde hava kirlilik verilerini toplayan, analiz eden ve görselleştiren web tabanlı bir platformdur.
+Bu proje, dünya genelinde hava kirlilik verilerini toplayan, analiz eden, görselleştiren ve anomalileri tespit edip bildirimleştiren web tabanlı bir platformdur.
 
 ## Projenin Amacı ve Kapsamı
 
@@ -8,7 +8,7 @@ HavaQualityApp, dünya genelinde ve özellikle Türkiye'deki hava kalitesi veril
 - Gerçek zamanlı olarak toplar ve analiz eder
 - Kullanıcı dostu bir arayüzle harita üzerinde görselleştirir
 - Anomali tespiti yaparak tehlikeli hava kalitesi durumlarında uyarılar oluşturur
-- Tarihsel verileri saklayarak trend analizi sağlar
+- Verileri analiz ederk 24 saatlik tahminler oluşturur.
 
 Platform, çeşitli kirletici maddeleri (PM2.5, PM10, NO2, SO2, O3) takip eder ve WHO standartlarına göre tehlikeli seviyeleri belirler.
 
@@ -18,14 +18,12 @@ Platform, çeşitli kirletici maddeleri (PM2.5, PM10, NO2, SO2, O3) takip eder v
 
 Proje, mikroservis mimarisini temel alan Docker konteynerlerinde çalışan bileşenlerden oluşur:
 
-![Sistem Mimarisi](https://example.com/architecture.png)
-
 ### Ana Bileşenler
 
 1. **Backend Servisi**: 
    - FastAPI ile geliştirilmiş RESTful API
    - Hava kalitesi verilerini sağlar ve anomali tespiti yapar
-   - WebSocket üzerinden gerçek zamanlı veri akışı ve bildirimler
+   - WebSocket üzerinden gerçek zamanlı veri akışı ve uyarılar
 
 2. **Frontend Servisi**:
    - React ve Material UI ile geliştirilmiş kullanıcı arayüzü
@@ -46,7 +44,7 @@ Proje, mikroservis mimarisini temel alan Docker konteynerlerinde çalışan bile
    - Ölçeklenebilirlik ve güvenilirlik sağlar
 
 6. **Test Araçları**:
-   - Manuel veri girişi ve otomatik test scriptleri
+   - Manuel veri girişi
 
 ## Teknoloji Seçimleri ve Gerekçeleri
 
@@ -75,8 +73,8 @@ Proje, mikroservis mimarisini temel alan Docker konteynerlerinde çalışan bile
 ### Kurulum
 1. Projeyi klonlayın:
 ```bash
-git clone https://github.com/kullanici/hava-kalitesi-izleme.git
-cd hava-kalitesi-izleme
+git clone https://github.com/osmantalayhan/air-quality-app.git
+cd air-quality-app
 ```
 
 2. Docker Compose ile çalıştırın:
@@ -84,7 +82,7 @@ cd hava-kalitesi-izleme
 docker-compose up -d
 ```
 
-3. Servislerin başlamasını bekleyin (yaklaşık 30-60 saniye):
+3. Servislerin başlamasını bekleyin:
 ```bash
 docker-compose ps
 ```
@@ -155,12 +153,10 @@ npm start
 
 ### Anomali İzleme
 - Anomaliler ekranında tespit edilen tüm anormallikler listelenir
-- Filtreler ile şiddet derecesine, tarih aralığına veya konuma göre filtreleme
-- Anomali detayları için ilgili satıra tıklayın
 
 ### Manuel Veri Girişi
 - "Manuel Veri Girişi" sekmesine gidin
-- Harita üzerinde konum seçin veya koordinatları manuel girin
+- koordinatları girin
 - Hava kalitesi parametrelerini doldurun ve "Gönder" butonuna tıklayın
 
 ## API Dokümantasyonu
@@ -174,13 +170,12 @@ http://localhost:8000/docs
 
 #### Sensör Verileri
 - `GET /sensors` - Tüm sensörlerin listesini alır
-- `GET /sensors?location={location}` - Konum bazında filtrelenmiş sensör listesi
+- `GET /sensors?location=sehir_adı` - Konum bazında filtrelenmiş sensör listesi
 
 #### Hava Kalitesi Verileri
 - `GET /air-quality` - Tüm hava kalitesi verilerini döndürür
-- `GET /api/v1/air-quality/latest` - En son hava kalitesi verilerini alır
-- `GET /api/v1/air-quality/history?hours={hours}` - Belirli bir zaman aralığındaki verileri alır
-- `GET /api/v1/air-quality/by-region?latitude={lat}&longitude={lon}&radius={r}` - Bölgesel veriler
+- `GET /air-quality?hours=24` - Son 24 saatin hava kalitesi verilerini alır
+- `GET /api/v1/air-quality/regional?lat={lat}lon={lon}&radius={radius}&hours={hours}` - Bölgesel veriler alır
 
 #### Anomali API'leri
 - `GET /api/v1/anomalies` - Tüm anomalileri listeler
