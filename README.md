@@ -2,7 +2,7 @@
 
 Bu proje, Kartaca "Çekirdekten Yetişenler Programı" kapsamında geliştirilen, dünya genelinde hava kirlilik verilerini toplayan, analiz eden ve görselleştiren web tabanlı bir platformdur.
 
-## 📋 Projenin Amacı ve Kapsamı
+## Projenin Amacı ve Kapsamı
 
 HavaQualityApp, dünya genelinde ve özellikle Türkiye'deki hava kalitesi verilerini:
 - Gerçek zamanlı olarak toplar ve analiz eder
@@ -12,7 +12,7 @@ HavaQualityApp, dünya genelinde ve özellikle Türkiye'deki hava kalitesi veril
 
 Platform, çeşitli kirletici maddeleri (PM2.5, PM10, NO2, SO2, O3) takip eder ve WHO standartlarına göre tehlikeli seviyeleri belirler.
 
-## 🏗️ Sistem Mimarisi ve Komponentlerin Açıklaması
+## Sistem Mimarisi ve Komponentlerin Açıklaması
 
 ### Genel Mimari
 
@@ -48,7 +48,7 @@ Proje, mikroservis mimarisini temel alan Docker konteynerlerinde çalışan bile
 6. **Test Araçları**:
    - Manuel veri girişi ve otomatik test scriptleri
 
-## 🛠️ Teknoloji Seçimleri ve Gerekçeleri
+## Teknoloji Seçimleri ve Gerekçeleri
 
 ### Backend
 - **FastAPI**: Hızlı geliştirme, asenkron destek ve otomatik API dokümantasyonu için tercih edildi
@@ -66,7 +66,7 @@ Proje, mikroservis mimarisini temel alan Docker konteynerlerinde çalışan bile
 - **Docker & Docker Compose**: Kolay dağıtım ve geliştirme ortamı standardizasyonu
 - **Nginx**: Frontend için web sunucusu
 
-## 🚀 Kurulum Adımları
+## Kurulum Adımları
 
 ### Ön Koşullar
 - Docker ve Docker Compose yüklü olmalıdır
@@ -139,7 +139,7 @@ REACT_APP_WS_URL=ws://localhost:8000/ws/alerts
 npm start
 ```
 
-## 📱 Kullanım Rehberi
+## Kullanım Rehberi
 
 ### Ana Ekran (Dashboard)
 - Harita üzerinde dünya genelinde hava kalitesi değerleri gösterilir
@@ -163,7 +163,7 @@ npm start
 - Harita üzerinde konum seçin veya koordinatları manuel girin
 - Hava kalitesi parametrelerini doldurun ve "Gönder" butonuna tıklayın
 
-## 📡 API Dokümantasyonu
+## API Dokümantasyonu
 
 API dokümantasyonu Swagger UI ile otomatik olarak oluşturulmuştur:
 ```
@@ -190,7 +190,7 @@ http://localhost:8000/docs
 #### WebSocket
 - `WebSocket /ws/alerts` - Gerçek zamanlı uyarılar için WebSocket bağlantısı
 
-## 📜 Script'lerin Kullanımı ve Parametreleri
+## Script'lerin Kullanımı ve Parametreleri
 
 ### Manuel Veri Girişi Script'i
 ```bash
@@ -226,7 +226,7 @@ Seçenekler:
 ./scripts/auto-test.sh --duration=3600 --rate=5 --anomaly-chance=20
 ```
 
-## 🔧 Sorun Giderme (Troubleshooting) Rehberi
+## Sorun Giderme (Troubleshooting) Rehberi
 
 ### Genel Sorunlar
 
@@ -318,7 +318,7 @@ docker network ls
 docker network inspect hava-kalitesi-izleme_default
 ```
 
-## 🔍 Ek Bilgiler
+## Ek Bilgiler
 
 ### Veri Kaynakları
 Uygulama, Open-Meteo Air Quality API'sini kullanarak gerçek zamanlı hava kalitesi verilerini çekmektedir.
@@ -335,11 +335,11 @@ Uygulama, Open-Meteo Air Quality API'sini kullanarak gerçek zamanlı hava kalit
 
 3. Aynı bölgedeki (25km yarıçap) diğer sensörlerden önemli ölçüde farklı değerler
 
-## 📝 Lisans
+## Lisans
 Bu proje MIT lisansı altında lisanslanmıştır.
 
-## 🤝 Katkıda Bulunanlar
+## Katkıda Bulunanlar
 - Takım üyeleri ve katkıda bulunanlar
 
-## 📞 İletişim
+## İletişim
 Sorularınız veya geri bildirimleriniz için: tlyhnosman@gmail.com 
