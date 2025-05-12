@@ -2,7 +2,7 @@
 
 Bu proje, dünya genelinde hava kirlilik verilerini toplayan, analiz eden, görselleştiren ve anomalileri tespit edip bildirimleştiren web tabanlı bir platformdur.
 
-![Harita ve uyarı paneli](preview/1.png),
+![Harita ve uyarı paneli](preview/1.png)
 ![Harita ve uyarı paneli](preview/2.png)
 ![Bilgilendirmeler ve 24 saatlik tahmin](preview/3.png)
 ![WHO standartları karşılaştırması](preview/4.png)
