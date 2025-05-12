@@ -2,6 +2,15 @@
 
 Bu proje, dünya genelinde hava kirlilik verilerini toplayan, analiz eden, görselleştiren ve anomalileri tespit edip bildirimleştiren web tabanlı bir platformdur.
 
+![Harita ve uyarı paneli](preview/1.png),
+![Harita ve uyarı paneli](preview/2.png)
+![Bilgilendirmeler ve 24 saatlik tahmin](preview/3.png)
+![WHO standartları karşılaştırması](preview/4.png)
+![Grafikler](preview/5.png)
+![Manuel veri giriş sayfası](preview/6.png)
+![API Dokümantasyonu](preview/7.png)
+![Sensör Verileri](preview/8.png)
+
 ## Projenin Amacı ve Kapsamı
 
 HavaQualityApp, dünya genelinde ve özellikle Türkiye'deki hava kalitesi verilerini:
