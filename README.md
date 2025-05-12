@@ -280,6 +280,8 @@ REACT_APP_WS_URL=ws://localhost:8000/ws/alerts
 ```bash
 # Backend loglarını inceleyin
 docker-compose logs backend | grep -i websocket
+# veya Windows için
+docker-compose logs backend | Select-String -Pattern "websocket" -CaseSensitive:$false
 ```
 
 ### Yaygın Hatalar ve Çözümleri
@@ -310,7 +312,7 @@ pip install --upgrade pip
 ```bash
 # Docker network ayarlarını kontrol edin
 docker network ls
-docker network inspect hava-kalitesi-izleme_default
+docker network inspect air_quality_app_default
 ```
 
 ## Ek Bilgiler
@@ -326,15 +328,10 @@ Uygulama, Open-Meteo Air Quality API'sini kullanarak gerçek zamanlı hava kalit
    - SO2 > 20.0 μg/m³
    - O3 > 100.0 μg/m³
 
-2. Son 24 saatlik ortalamaya göre %50'den fazla artış gösteren değerler
-
-3. Aynı bölgedeki (25km yarıçap) diğer sensörlerden önemli ölçüde farklı değerler
-
-## Lisans
-Bu proje MIT lisansı altında lisanslanmıştır.
+2. Aynı bölgedeki (25km yarıçap) diğer sensörlerden önemli ölçüde farklı değerler
 
 ## Katkıda Bulunanlar
-- Takım üyeleri ve katkıda bulunanlar
+- Osman Talayhan
 
 ## İletişim
 Sorularınız veya geri bildirimleriniz için: tlyhnosman@gmail.com 
