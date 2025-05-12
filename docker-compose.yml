@@ -1,0 +1,138 @@
+services:
+  # Backend servisi
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/hava
+      - JWT_SECRET_KEY=your_jwt_secret_key_here
+      - JWT_ALGORITHM=HS256
+      - PYTHONUNBUFFERED=1
+      - CORS_ORIGINS=http://localhost:3000
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - POSTGRES_HOST=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=hava
+      - POSTGRES_PORT=5432
+    depends_on:
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    volumes:
+      - ./backend:/app
+      - backend_data:/app/data
+
+  # PostgreSQL + TimescaleDB
+  db:
+    image: timescale/timescaledb:latest-pg13
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=hava
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/init-db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"  # AMQP protokolü
+      - "15672:15672"  # Yönetim arayüzü
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    restart: always
+
+  # Data Processor Servisi
+  data-processor:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: python data_processor.py
+    environment:
+      - PYTHONUNBUFFERED=1
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/hava
+      - POSTGRES_HOST=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=hava
+      - POSTGRES_PORT=5432
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: always
+    volumes:
+      - ./backend:/app
+      - backend_data:/app/data
+
+  # Frontend servisi
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_WS_URL=ws://localhost:8000/ws/alerts
+      - DANGEROUSLY_DISABLE_HOST_CHECK=true
+      - WDS_SOCKET_PORT=0
+      - REACT_APP_MAPBOX_TOKEN=pk.eyJ1Ijoib3NtYW50YWxheWhhbiIsImEiOiJjbTk4bDhwdDQwM3pvMnJzYnoyN3kwOWZnIn0.AhiHYuOL4GbvJG5mgboDNw
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: always
+
+  # Veri gönderme aracı
+  data-feeder:
+    build:
+      context: ./tools
+      dockerfile: Dockerfile
+    environment:
+      - API_URL=http://backend:8000
+      - SIMULATION_INTERVAL=10
+      - ANOMALY_CHANCE=15
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: on-failure
+    volumes:
+      - ./tools:/app
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+  backend_data: 
