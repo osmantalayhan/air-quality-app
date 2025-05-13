@@ -1,7 +1,3 @@
-"""
-Hava Kalitesi API İstemcisi
-Open-Meteo API'sini kullanarak hava kalitesi verilerini çeker
-"""
 import os
 import json
 import logging
