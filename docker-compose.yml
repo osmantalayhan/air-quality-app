@@ -110,7 +110,7 @@ services:
       - REACT_APP_WS_URL=ws://localhost:8000/ws/alerts
       - DANGEROUSLY_DISABLE_HOST_CHECK=true
       - WDS_SOCKET_PORT=0
-      - REACT_APP_MAPBOX_TOKEN=pk.eyJ1Ijoib3NtYW50YWxheWhhbiIsImEiOiJjbTk4bDhwdDQwM3pvMnJzYnoyN3kwOWZnIn0.AhiHYuOL4GbvJG5mgboDNw
+      - REACT_APP_MAPBOX_TOKEN={mapbox_token}
     depends_on:
       backend:
         condition: service_healthy
