@@ -1,5 +1,5 @@
 ![banner](banner.png)
-# AirQualityApp - Gerçek Zamanlı Hava Kirliliği İzleme Platformu
+# Gerçek Zamanlı Hava Kirliliği İzleme Platformu
 
 Bu proje, dünya genelinde hava kirlilik verilerini toplayan, analiz eden, görselleştiren ve anomalileri tespit edip bildirimleştiren web tabanlı bir platformdur.
 
