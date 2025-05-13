@@ -1,6 +1,5 @@
 # ![banner](preview/banner.png)
-# Gerçek Zamanlı Hava Kirliliği İzleme Platformu
-
+Gerçek Zamanlı Hava Kirliliği İzleme Platformu
 Bu proje, dünya genelinde hava kirlilik verilerini toplayan, analiz eden, görselleştiren ve anomalileri tespit edip bildirimleştiren web tabanlı bir platformdur.
 
 ![Harita ve uyarı paneli](preview/1.png)
