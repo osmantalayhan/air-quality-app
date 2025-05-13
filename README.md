@@ -13,7 +13,7 @@ Bu proje, dünya genelinde hava kirlilik verilerini toplayan, analiz eden, görs
 
 ## Projenin Amacı ve Kapsamı
 
-HavaQualityApp, dünya genelinde ve özellikle Türkiye'deki hava kalitesi verilerini:
+AirQualityApp, dünya genelinde ve özellikle Türkiye'deki hava kalitesi verilerini:
 - Gerçek zamanlı olarak toplar ve analiz eder
 - Kullanıcı dostu bir arayüzle harita üzerinde görselleştirir
 - Anomali tespiti yaparak tehlikeli hava kalitesi durumlarında uyarılar oluşturur
