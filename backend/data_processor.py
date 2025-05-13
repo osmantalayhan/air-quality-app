@@ -1,6 +1,6 @@
 """
 Hava Kalitesi Verilerini İşleme Servisi
-Bu servis RabbitMQ kuyruklarından mesajları dinler, işler ve gerekli analitik işlemleri gerçekleştirir.
+Burası RabbitMQ kuyruklarından mesajları dinler, işler ve gerekli analitik işlemleri gerçeklestirir.
 """
 import asyncio
 import json
