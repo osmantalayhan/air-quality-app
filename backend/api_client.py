@@ -19,9 +19,6 @@ logging.basicConfig(
 logger = logging.getLogger("api_client")
 
 class AirQualityClient:
-    """
-    Open-Meteo hava kalitesi verilerini çekmek için API istemci sınıfı.
-    """
     
     def __init__(self):
         """
