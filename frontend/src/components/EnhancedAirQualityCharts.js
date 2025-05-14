@@ -17,17 +17,16 @@ const EnhancedAirQualityCharts = ({
   wsConnected = false,
   selectedRegionSensors = []
 }) => {
-  // İstasyon değişimini takip etmek için, seçilen şehrin adını loglayalım
+  // İstasyon değişimini takip etmek için, seçilen şehrin adını loglama
   console.log(`[DEBUG] EnhancedAirQualityCharts - Seçili şehir: ${selectedCity?.name || 'Seçili şehir yok'}`);
   console.log(`[DEBUG] EnhancedAirQualityCharts - Bölgesel veri sayısı: ${selectedRegionData?.length || 0}`);
   
   // Veri değiştiğinde son güncelleme zamanını API'den gelen veriye göre ayarla
   const [lastUpdateTime, setLastUpdateTime] = React.useState(null);
   
-  // Güncelleme durumunu göstermek için state
   const [dataStatus, setDataStatus] = React.useState({
     isUpdating: false,
-    lastUpdateResult: null // 'success', 'error', null
+    lastUpdateResult: null
   });
   
   // Şehir değiştiğinde tüm grafikler için yeniden render tetiklensin
@@ -35,39 +34,33 @@ const EnhancedAirQualityCharts = ({
     return selectedCity ? `city-${selectedCity.name || selectedCity.id || Date.now()}` : 'no-city';
   }, [selectedCity]);
   
-  // Veri değiştiğinde son güncelleme zamanını ayarla
   React.useEffect(() => {
-    // Son güncellenme zamanını API verisi üzerinden al
     if (selectedRegionData?.length > 0) {
       const lastDataPoint = selectedRegionData[selectedRegionData.length - 1];
       if (lastDataPoint && lastDataPoint.timestamp) {
         try {
           let timestamp;
-          // ISO formatı kontrolü
           if (typeof lastDataPoint.timestamp === 'string' && lastDataPoint.timestamp.includes('T')) {
             timestamp = new Date(lastDataPoint.timestamp);
           } else if (typeof lastDataPoint.timestamp === 'number' || !isNaN(parseInt(lastDataPoint.timestamp))) {
-            // Unix timestamp kontrolü (sayı ise)
             timestamp = new Date(parseInt(lastDataPoint.timestamp));
           } else {
-            // Standart tarih string'i
             timestamp = new Date(lastDataPoint.timestamp);
           }
           
           if (!isNaN(timestamp.getTime())) {
             setLastUpdateTime(timestamp);
           } else {
-            setLastUpdateTime(new Date()); // Geçersiz tarih durumunda şu anki zamanı kullan
+            setLastUpdateTime(new Date());
           }
         } catch (err) {
           console.warn("Geçersiz timestamp formatı:", lastDataPoint.timestamp);
-          setLastUpdateTime(new Date()); // Fallback olarak şu anki zamanı kullan
+          setLastUpdateTime(new Date());
         }
       } else {
         setLastUpdateTime(new Date());
       }
     } else if (selectedCity) {
-      // İstasyon seçili ama veri yok, şu anki zamanı kullan
       setLastUpdateTime(new Date());
     }
     
@@ -111,7 +104,6 @@ const EnhancedAirQualityCharts = ({
     if (selectedCity && selectedRegionData?.length > 0) {
       return selectedRegionData[selectedRegionData.length - 1];
     } else if (selectedCity) {
-      // Sensör verisi olarak direk şehir verilerini kullan
       return selectedCity;
     }
     return null;
@@ -127,13 +119,11 @@ const EnhancedAirQualityCharts = ({
 
   // Veri yükleme durumunu kontrol et
   const isLoading = !airQualityData || (selectedCity && !selectedRegionData);
-  
-  // Bölgesel veri yoksa bile sensör verisi varsa veri var olarak kabul et
+
   const hasData = selectedCity 
     ? (selectedRegionData?.length > 0 || Object.keys(selectedCity).length > 0) 
     : airQualityData?.length > 0;
 
-  // Güncel ölçüm verilerini göstermek için debug amaçlı log 
   if (currentCityData) {
     console.log("Şehir verisi:", currentCityData);
     console.log("Ölçümler - PM2.5:", currentCityData.pm25, "PM10:", currentCityData.pm10, "NO2:", currentCityData.no2, "SO2:", currentCityData.so2, "O3:", currentCityData.o3);
@@ -141,7 +131,6 @@ const EnhancedAirQualityCharts = ({
     console.log("Bölgesel veri yok, sensör verisi kullanılıyor:", selectedCity);
   }
 
-  // Veri durumunu da görelim
   console.log("Veri Durum Kontrolü:", { 
     isLoading, 
     hasData, 
@@ -150,8 +139,7 @@ const EnhancedAirQualityCharts = ({
     airQualityDataLength: airQualityData?.length || 0,
     sensorHasData: selectedCity ? Object.keys(selectedCity).length > 0 : false
   });
-  
-  // WHO Standartları bileşenimizi ayrı bir fonksiyon olarak tanımlayalım
+
   const renderWHOStandards = () => {
     if (!selectedCity && !currentCityData) return null;
 
