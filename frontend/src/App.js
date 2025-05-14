@@ -82,7 +82,7 @@ function App() {
     wsRef.current = ws;
 
     ws.onopen = () => {
-      console.log('✅ WebSocket bağlantısı başarılı');
+      console.log('WebSocket bağlantısı başarılı');
       setWsConnected(true);
       setWsRetryCount(0);
       setNotification({
@@ -94,24 +94,24 @@ function App() {
 
     ws.onmessage = (event) => {
       try {
-        console.log('📩 WebSocket mesajı alındı:', event.data);
+        console.log('WebSocket mesajı alındı:', event.data);
         const data = JSON.parse(event.data);
         
         // Ping mesajlarını kontrol et
         if (data.type === 'ping') {
-          console.log('🔄 Ping alındı, bağlantı aktif');
+          console.log('Ping alındı, bağlantı aktif');
           ws.send(JSON.stringify({ type: 'pong', timestamp: Date.now() }));
           return;
         } else if (data.type === 'connection_established') {
-          console.log('🔄 Bağlantı kuruldu mesajı alındı');
+          console.log('Bağlantı kuruldu mesajı alındı');
           return;
         }
         
-        console.log('⚠️ Yeni uyarı alındı:', data);
+        console.log('Yeni uyarı alındı:', data);
         
         // Uyarı bilgilerini kontrol et
         if (!data.id) {
-          console.warn('❌ Gelen mesajda ID bilgisi yok, atlanıyor', data);
+          console.warn('Gelen mesajda ID bilgisi yok, atlanıyor', data);
           return;
         }
         
@@ -133,7 +133,7 @@ function App() {
               message: data.message || 'Uyarı detayı yok',
               severity: data.severity || 'medium',
             };
-            console.log(`🔄 Mevcut uyarı güncellendi, ID: ${data.id}`);
+            console.log(`Mevcut uyarı güncellendi, ID: ${data.id}`);
             return updatedAlerts;
           } else {
             // Yoksa ekle
@@ -161,22 +161,22 @@ function App() {
           });
         }
       } catch (error) {
-        console.error('❌ WebSocket mesajı işlenirken hata:', error);
+        console.error('WebSocket mesajı işlenirken hata:', error);
       }
     };
 
     ws.onclose = (event) => {
-      console.log(`❌ WebSocket bağlantısı kapandı: ${event.code}`, event);
+      console.log(`WebSocket bağlantısı kapandı: ${event.code}`, event);
       setWsConnected(false);
       
       // Bağlantı kapandıysa ve maksimum yeniden bağlantı denemesi aşılmadıysa
       if (wsRetryCount < 5) {
-        console.log(`🔄 Yeniden bağlanılıyor... (${wsRetryCount + 1}/5)`);
+        console.log(`Yeniden bağlanılıyor... (${wsRetryCount + 1}/5)`);
         
         // Yeniden bağlanma denemesi sayısını artır
         setWsRetryCount(prev => prev + 1);
       } else {
-        console.log('❌ Maksimum yeniden bağlantı denemesi aşıldı');
+        console.log('Maksimum yeniden bağlantı denemesi aşıldı');
         setNotification({
           open: true,
           message: 'Gerçek zamanlı uyarı sistemine bağlanılamadı',
@@ -186,7 +186,7 @@ function App() {
     };
 
     ws.onerror = (error) => {
-      console.error('❌ WebSocket hatası:', error);
+      console.error('WebSocket hatası:', error);
     };
     
     // Sensörleri getir
@@ -480,7 +480,7 @@ function App() {
     // Alerts 50'den fazlaysa, en eski uyarıları kaldır
     const limitedAlerts = alerts.slice(0, 50);
     localStorage.setItem('havaQualityAlerts', JSON.stringify(limitedAlerts));
-    console.log(`📝 ${limitedAlerts.length} uyarı localStorage'a kaydedildi`);
+    console.log(`${limitedAlerts.length} uyarı localStorage'a kaydedildi`);
   }, [alerts]);
 
   // WebSocket bağlantısını yeniden başlat
@@ -495,7 +495,7 @@ function App() {
     wsRef.current = ws;
     
     ws.onopen = () => {
-      console.log('✅ WebSocket bağlantısı başarılı');
+      console.log('WebSocket bağlantısı başarılı');
       setWsConnected(true);
       setWsRetryCount(0);
       setNotification({
@@ -507,24 +507,24 @@ function App() {
     
     ws.onmessage = (event) => {
       try {
-        console.log('📩 WebSocket mesajı alındı:', event.data);
+        console.log('WebSocket mesajı alındı:', event.data);
         const data = JSON.parse(event.data);
         
         // Ping mesajlarını kontrol et
         if (data.type === 'ping') {
-          console.log('🔄 Ping alındı, bağlantı aktif');
+          console.log('Ping alındı, bağlantı aktif');
           ws.send(JSON.stringify({ type: 'pong', timestamp: Date.now() }));
           return;
         } else if (data.type === 'connection_established') {
-          console.log('🔄 Bağlantı kuruldu mesajı alındı');
+          console.log('Bağlantı kuruldu mesajı alındı');
           return;
         }
         
-        console.log('⚠️ Yeni uyarı alındı:', data);
+        console.log('Yeni uyarı alındı:', data);
         
         // Uyarı bilgilerini kontrol et
         if (!data.id) {
-          console.warn('❌ Gelen mesajda ID bilgisi yok, atlanıyor', data);
+          console.warn('Gelen mesajda ID bilgisi yok, atlanıyor', data);
           return;
         }
         
@@ -546,7 +546,7 @@ function App() {
               message: data.message || 'Uyarı detayı yok',
               severity: data.severity || 'medium',
             };
-            console.log(`🔄 Mevcut uyarı güncellendi, ID: ${data.id}`);
+            console.log(`Mevcut uyarı güncellendi, ID: ${data.id}`);
             return updatedAlerts;
           } else {
             // Yoksa ekle
@@ -577,17 +577,17 @@ function App() {
         // Yeni uyarı geldiğinde sensör verilerini güncelle
         fetchSensors();
       } catch (error) {
-        console.error('❌ WebSocket mesajı işlenirken hata:', error);
+        console.error('WebSocket mesajı işlenirken hata:', error);
       }
     };
     
     ws.onclose = (event) => {
-      console.log(`❌ WebSocket bağlantısı kapandı: ${event.code}`, event);
+      console.log(`WebSocket bağlantısı kapandı: ${event.code}`, event);
       setWsConnected(false);
     };
     
     ws.onerror = (error) => {
-      console.error('❌ WebSocket hatası:', error);
+      console.error('WebSocket hatası:', error);
     };
   };
 
