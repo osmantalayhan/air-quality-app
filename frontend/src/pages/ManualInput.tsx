@@ -54,24 +54,22 @@ const pollutantOptions = [
   { value: 'aqi', label: 'Hava Kalitesi İndeksi (AQI)' }
 ];
 
-// Basit bir AQI hesaplama fonksiyonu (gerçek hesaplamalar daha karmaşık olabilir)
 const calculateAQI = (parameter: string, value: number): number => {
-  // Basit bir hesaplama - gerçek hesaplamalar daha karmaşık olacaktır
   switch (parameter) {
     case 'pm25':
-      return Math.min(500, Math.round(value * 4)); // PM2.5 için basit bir hesaplama
+      return Math.min(500, Math.round(value * 4));
     case 'pm10':
-      return Math.min(500, Math.round(value * 2)); // PM10 için basit bir hesaplama
+      return Math.min(500, Math.round(value * 2));
     case 'no2':
-      return Math.min(500, Math.round(value * 5)); // NO2 için basit bir hesaplama
+      return Math.min(500, Math.round(value * 5));
     case 'so2':
-      return Math.min(500, Math.round(value * 10)); // SO2 için basit bir hesaplama
+      return Math.min(500, Math.round(value * 10));
     case 'o3':
-      return Math.min(500, Math.round(value * 3)); // O3 için basit bir hesaplama
+      return Math.min(500, Math.round(value * 3));
     case 'aqi':
-      return Math.min(500, Math.round(value)); // Direkt AQI değeri
+      return Math.min(500, Math.round(value));
     default:
-      return 50; // Varsayılan değer
+      return 50;
   }
 };
 
@@ -94,7 +92,7 @@ const ManualInput: React.FC<ManualInputProps> = ({ onDataSubmitted }) => {
       return;
     }
 
-    // Değerlerin sayı olup olmadığını kontrol et
+    // Değerlerin sayı olup olmadığını kontrol ettim
     const latValue = parseFloat(latitude);
     const lngValue = parseFloat(longitude);
     const pollutantValue = parseFloat(value);
@@ -142,14 +140,11 @@ const ManualInput: React.FC<ManualInputProps> = ({ onDataSubmitted }) => {
       setParameter('pm25');
       setValue('');
       
-      // Veri başarıyla gönderildiğinde callback'i çağır
       if (onDataSubmitted) {
         console.log('Veri başarıyla gönderildi, sayfa yenileniyor...');
         
-        // Kullanıcıya bilgi ver
         alert(`${parameter.toUpperCase()} değeri (${value}) başarıyla güncellendi! Sayfa yenileniyor...`);
         
-        // Callback'i çağır
         onDataSubmitted();
       }
     } catch (err) {
@@ -162,13 +157,10 @@ const ManualInput: React.FC<ManualInputProps> = ({ onDataSubmitted }) => {
     }
   };
 
-  // API yanıtını kontrol et ve uygun şekilde göster
   const renderResponseData = () => {
     if (!responseData || !success) return null;
     
-    // "data" özelliği varsa ilk format, yoksa alternatif format
     if ('data' in responseData) {
-      // İlk format (ApiResponse)
       const data = responseData.data;
       return (
         <Paper sx={{ p: 3, bgcolor: '#e8f5e9', color: '#1b5e20' }}>
@@ -187,7 +179,6 @@ const ManualInput: React.FC<ManualInputProps> = ({ onDataSubmitted }) => {
         </Paper>
       );
     } else {
-      // Alternatif format (AlternativeApiResponse)
       return (
         <Paper sx={{ p: 3, bgcolor: '#e8f5e9', color: '#1b5e20' }}>
           <Typography variant="h6" gutterBottom>Veri başarıyla gönderildi!</Typography>
