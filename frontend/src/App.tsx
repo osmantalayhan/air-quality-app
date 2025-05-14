@@ -25,14 +25,11 @@ function App() {
               <Route path="anomalies/:id" element={<AnomalyDetail />} />
               <Route path="settings" element={<Settings />} />
               <Route path="manual-input" element={<ManualInput onDataSubmitted={() => {
-                // Manuel veri girişi yapıldıktan sonra sayfayı yenileyelim
-                // Backend'in veriyi işlemesi için biraz bekleyelim
                 console.log("Manuel veri girişi başarılı, sayfa yenilenecek...");
                 setTimeout(() => {
                   console.log("Sayfa yenileniyor...");
-                  // Tam bir sayfa yenilemesi için location.href kullan
                   window.location.href = window.location.origin;
-                }, 1500); // 1.5 saniye bekle
+                }, 1500);
               }} />} />
             </Route>
           </Routes>
