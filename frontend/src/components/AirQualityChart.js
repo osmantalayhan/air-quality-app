@@ -66,26 +66,23 @@ const AirQualityChart = ({
   const [selectedParameter, setSelectedParameter] = useState(defaultParameter);
   const [chartData, setChartData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [chartKey, setChartKey] = useState(Date.now()); // Unique key for forcing chart re-renders
+  const [chartKey, setChartKey] = useState(Date.now());
   
-  // Seçili şehir/bölge değiştiğinde veriyi sıfırla (bu grafik yeniden çizilmesini zorlayacak)
+  // Seçili şehir/bölge değiştiğinde veriyi sıfırlar
   useEffect(() => {
-    // Veriyi temizle ve grafiklerin yeniden oluşturulmasını sağla
+    // Veriyi temizler ve grafiklerin yeniden oluşturulmasını sağlar
     setChartData(null);
     setIsLoading(true);
-    setChartKey(Date.now()); // Her istasyon değişiminde benzersiz anahtar oluştur
+    setChartKey(Date.now()); // Her istasyon değişiminde benzersiz anahtar oluşturur
     
     console.log(`[DEBUG] AirQualityChart - "${title}" için veri temizlendi, yeniden çizilecek`);
     console.log(`[DEBUG] AirQualityChart - İstasyon değişimi tetiklendi, selectedRegionData: ${selectedRegionData?.length || 0} kayıt`);
-  }, [selectedRegionData, title]); // selectedRegionData değiştiğinde, yani istasyon/şehir değiştiğinde çalışacak
+  }, [selectedRegionData, title]);
   
-  // Veri değiştiğinde chart'ı güncelle
   useEffect(() => {
     try {
-      // İstasyon değişimini kontrol etmek için loglama yapıyoruz
       console.log(`[DEBUG] AirQualityChart - "${title}" için veri güncelleniyor.`);
       
-      // Doğru veri kaynağını seç
       let sourceData = selectedRegionData?.length > 0 ? selectedRegionData : airQualityData;
       console.log(`[DEBUG] Veri kaynağı: ${selectedRegionData?.length > 0 ? "selectedRegionData" : "airQualityData"}`);
       console.log(`[DEBUG] Veri sayısı: ${sourceData?.length || 0}`);
@@ -104,7 +101,6 @@ const AirQualityChart = ({
       // JSON'dan veri güvenlik kontrolü ve bozuk veri temizliği
       let validData = Array.isArray(sourceData) ? sourceData.filter(item => 
         item && typeof item === 'object' && 
-        // En azından bir parametre değerini kontrol et
         (item.pm25 !== undefined || item.pm10 !== undefined || 
          item.no2 !== undefined || item.so2 !== undefined || 
          item.o3 !== undefined || item.aqi !== undefined)
@@ -156,7 +152,6 @@ const AirQualityChart = ({
         let dateA, dateB;
         
         try {
-          // A için tarih dönüşümü
           if (typeof a.timestamp === 'string' && a.timestamp.includes('T')) {
             dateA = new Date(a.timestamp);
           } else if (typeof a.timestamp === 'number' || !isNaN(parseInt(a.timestamp))) {
@@ -165,7 +160,6 @@ const AirQualityChart = ({
             dateA = new Date(a.timestamp);
           }
           
-          // B için tarih dönüşümü
           if (typeof b.timestamp === 'string' && b.timestamp.includes('T')) {
             dateB = new Date(b.timestamp);
           } else if (typeof b.timestamp === 'number' || !isNaN(parseInt(b.timestamp))) {
@@ -181,7 +175,6 @@ const AirQualityChart = ({
         return dateA - dateB;
       });
       
-      // Veri noktalarını azalt (her 3 veri noktasından birini al gibi)
       if (filteredData.length > 20) {
         const every = Math.ceil(filteredData.length / 20);
         filteredData = filteredData.filter((_, index) => index % every === 0);
@@ -208,7 +201,7 @@ const AirQualityChart = ({
               param === 'pm25' ? 15 : (
                 param === 'pm10' ? 30 : (
                   param === 'no2' ? 25 : (
-                    param === 'so2' ? 10 : 40 // o3 için
+                    param === 'so2' ? 10 : 40
                   )
                 )
               )
@@ -222,7 +215,7 @@ const AirQualityChart = ({
         return cleanedPoint;
       });
       
-      // İlk ve son veri noktalarının değerlerini göster (değişimi görmek için)
+      // İlk ve son veri noktalarının değerlerini göster
       const paramToCheck = showMultipleParameters ? showMultipleParameters[0] : selectedParameter;
       if (filteredData.length > 0) {
         console.log(`[DEBUG] İlk veri noktası (${paramToCheck}): ${filteredData[0][paramToCheck]}`);
@@ -253,7 +246,7 @@ const AirQualityChart = ({
           console.warn("Tarih dönüşüm hatası:", err);
           return null;
         }
-      }).filter(Boolean); // null değerleri filtrele
+      }).filter(Boolean);
       
       // Anomali tespiti - Son 24 saatlik ortalamaya göre %50'den fazla artış gösteren değerler
       let anomalyPoints = {};
@@ -309,14 +302,11 @@ const AirQualityChart = ({
       // Tahmin verileri oluştur
       const forecastData = generateForecastData(filteredData, paramToCheck);
       
-      // Çoklu parametre için veri setleri oluştur
       let datasets = [];
     
     if (showMultipleParameters) {
-      // Birden fazla parametre göster
       showMultipleParameters.forEach(param => {
           if (filteredData[0][param] !== undefined) {
-            // Normal veri serisi
         datasets.push({
           label: parameterLabels[param] || param,
               data: filteredData.map(d => d[param] || 0),
@@ -324,7 +314,7 @@ const AirQualityChart = ({
           backgroundColor: parameterColors[param],
           borderColor: parameterColors[param],
               borderWidth: 2,
-              tension: 0.4, // Daha yumuşak eğriler için
+              tension: 0.4,
           pointRadius: 3,
               pointHoverRadius: 5,
               pointBackgroundColor: parameterColors[param],
@@ -394,7 +384,6 @@ const AirQualityChart = ({
           }
         });
       } else {
-        // Eğer hiç geçmiş veri yoksa ve sadece tek bir veri noktası varsa (ör. anlık sensör verisi)
         if (filteredData.length === 1) {
           // Sabit tahmin üret
           const lastPoint = filteredData[0];
@@ -408,9 +397,7 @@ const AirQualityChart = ({
               [param]: value
             });
           }
-          // X ekseni için label'ları uzat
           labels.push(...forecast.map(d => d.timestamp));
-          // Geçmiş veri seti (tek nokta)
           datasets.push({
             label: parameterLabels[param] || param,
             data: [value],
@@ -422,7 +409,6 @@ const AirQualityChart = ({
             pointRadius: 3,
             pointHoverRadius: 5
           });
-          // Tahmin veri seti (düz çizgi)
           datasets.push({
             label: 'Tahmin',
             data: [value, ...forecast.map(d => d[param])],
@@ -436,7 +422,6 @@ const AirQualityChart = ({
             borderCapStyle: 'round',
             spanGaps: true
           });
-          // Kullanıcıya açıklama mesajı
           setChartData({
             type: 'line',
             data: {
@@ -535,7 +520,6 @@ const AirQualityChart = ({
         }
       }
       
-      // Chart.js veri yapısını doğru formatta oluştur
       setChartData({
         type: 'line',
         data: {
@@ -558,15 +542,12 @@ const AirQualityChart = ({
     setSelectedParameter(event.target.value);
   };
   
-  // Tahmin algoritması: Mevcut veriler üzerinden trend analizi yaparak gelecek 24 saat için tahmin
   const generateForecastData = (filteredData, param) => {
     if (!filteredData || filteredData.length < 2) return [];
     
     try {
-      // Son 5 veri noktasını al ve eğilimi hesapla
       const lastPoints = filteredData.slice(-5);
       
-      // Son 5 noktadan trend hesapla (basit lineer regresyon)
       let sumX = 0;
       let sumY = 0;
       let sumXY = 0;
@@ -751,7 +732,7 @@ const AirQualityChart = ({
           color: '#666',
           padding: 8,
           callback: function(value) {
-            return value % 1 === 0 ? value : '';  // Sadece tam sayıları göster
+            return value % 1 === 0 ? value : '';
           }
         },
         border: {
@@ -762,7 +743,7 @@ const AirQualityChart = ({
     },
     elements: {
       line: {
-        tension: 0.3,  // Daha yumuşak eğriler için
+        tension: 0.3,
         borderWidth: 2
       },
       point: {
@@ -792,7 +773,7 @@ const AirQualityChart = ({
     if (isLoading) {
       timeout = setTimeout(() => {
         setIsLoading(false);
-      }, 1500); // En fazla 1.5 saniye bekletme - veri yüklenmese bile bu süre sonunda loading durumunu kaldır
+      }, 1500);
     }
     
     return () => {
@@ -811,7 +792,6 @@ const AirQualityChart = ({
         value: d[selectedParameter] ?? null
       }));
 
-  // Sadece forecast modunda sade bir grafik
   if (isForecast) {
     return (
       <div style={{ width: '100%', height: 260 }}>
