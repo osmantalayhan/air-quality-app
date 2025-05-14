@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Box } from '@mui/material';
 
-mapboxgl.accessToken = 'pk.eyJ1Ijoib3NtYW50YWxheWhhbiIsImEiOiJjbTk4bDhwdDQwM3pvMnJzYnoyN3kwOWZnIn0.AhiHYuOL4GbvJG5mgboDNw';
+mapboxgl.accessToken = '{mapbox_token}';
 
 const Map: React.FC = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
