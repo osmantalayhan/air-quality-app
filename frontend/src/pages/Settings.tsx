@@ -42,7 +42,6 @@ const Settings = () => {
   };
 
   const handleSave = () => {
-    // TODO: Implement settings save functionality
     console.log('Settings saved:', settings);
   };
 
