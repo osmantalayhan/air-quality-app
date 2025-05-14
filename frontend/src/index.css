@@ -60,7 +60,6 @@ code {
   flex-direction: column;
 }
 
-/* Responsive ayarları */
 @media (max-width: 768px) {
   .container {
     padding: 10px;
