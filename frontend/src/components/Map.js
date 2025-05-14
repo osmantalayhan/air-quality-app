@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import { FormControlLabel, Switch, Box, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 // Mapbox API anahtarı
-mapboxgl.accessToken = 'pk.eyJ1Ijoib3NtYW50YWxheWhhbiIsImEiOiJjbTk4bDhwdDQwM3pvMnJzYnoyN3kwOWZnIn0.AhiHYuOL4GbvJG5mgboDNw';
+mapboxgl.accessToken = '{mapbox_token}';
 
 const MapContainer = styled('div')({
   height: '100%',
@@ -39,7 +39,7 @@ const Map = ({ sensors = [], onSensorClick }) => {
   const [showMarkers, setShowMarkers] = useState(true);
   const [mapView, setMapView] = useState('turkey'); // 'turkey', 'istanbul', 'world', 'all'
   const [zoom, setZoom] = useState(5);
-  const [center, setCenter] = useState([35.24, 38.95]); // Turkey center
+  const [center, setCenter] = useState([35.24, 38.95]);
 
   // Harita görünümünü değiştir
   const changeMapView = (view) => {
@@ -55,7 +55,7 @@ const Map = ({ sensors = [], onSensorClick }) => {
       setCenter([0, 30]);
       setZoom(2);
     } else if (view === 'all') {
-      setCenter([35.24, 38.95]); // Türkiye merkezi
+      setCenter([35.24, 38.95]);
       setZoom(4);
     }
     
@@ -70,7 +70,7 @@ const Map = ({ sensors = [], onSensorClick }) => {
 
   // İlk render'da haritayı oluştur
   useEffect(() => {
-    if (map.current) return; // Harita zaten oluşturulmuşsa, yeniden oluşturma
+    if (map.current) return; // Harita zaten oluşturulmuşsa, yeniden oluşturmaz
     
     // Mapbox haritası oluştur
     if (mapContainer.current) {
@@ -79,7 +79,7 @@ const Map = ({ sensors = [], onSensorClick }) => {
         
         map.current = new mapboxgl.Map({
           container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/dark-v11', // Koyu tema
+          style: 'mapbox://styles/mapbox/dark-v11', // harita temasıı
           center: center,
           zoom: zoom,
           attributionControl: true // Mapbox atıfını göster
@@ -114,7 +114,6 @@ const Map = ({ sensors = [], onSensorClick }) => {
                 5, 0.6, // Orta zoom'da sabit
                 9, 0.6  // Yakında da sabit yoğunluk
               ],
-              // Isı haritası renk gradyanı - zoom seviyesinden bağımsız olarak AQI değerlerine göre
               'heatmap-color': [
                 'interpolate', ['linear'], ['heatmap-density'],
                 0, 'rgba(0, 228, 0, 0)',      // Şeffaf (İyi)
@@ -127,13 +126,11 @@ const Map = ({ sensors = [], onSensorClick }) => {
               // Isı haritası yarıçapı - zoom'a göre uyarlandı ama daha dengeli
               'heatmap-radius': [
                 'interpolate', ['linear'], ['zoom'],
-                0, 20,   // Uzakta daha küçük (geniş alanlar için)
-                5, 30,   // Orta zoom'da orta büyüklük
-                9, 40    // Yakında daha büyük yarıçap
+                0, 20,
+                5, 30,
+                9, 40
               ],
-              // Isı haritası opaklığı - sabit
               'heatmap-opacity': 0.8,
-              // Isının AQI değerine göre ağırlığı - AQI değerine doğrudan bağlı
               'heatmap-weight': [
                 'interpolate', ['linear'], ['get', 'aqi'],
                 0, 0,      // 0 AQI = 0 ağırlık
@@ -145,20 +142,17 @@ const Map = ({ sensors = [], onSensorClick }) => {
               ]
             },
             'layout': {
-              'visibility': 'visible' // Başlangıçta görünür
+              'visibility': 'visible'
             }
           });
           
           setMapInitialized(true);
           
-          // Başlangıç veri kümesini hazırla
           updateMapData();
           
-          // Hafif animasyon efekti için periyodik güncelleme başlat
           startHeatmapAnimation();
         });
         
-        // Harita hatalarını yakala
         map.current.on('error', (e) => {
           console.error("Harita hatası:", e);
         });
@@ -167,15 +161,12 @@ const Map = ({ sensors = [], onSensorClick }) => {
       }
     }
 
-    // Cleanup fonksiyonu
     return () => {
-      // Mevcut işaretçileri temizle
       if (markersRef.current) {
         markersRef.current.forEach(marker => marker.remove());
         markersRef.current = [];
       }
       
-      // Haritayı kaldır
       if (map.current) {
         map.current.remove();
         map.current = null;
@@ -183,22 +174,18 @@ const Map = ({ sensors = [], onSensorClick }) => {
     };
   }, [center, zoom]);
 
-  // Harita animasyonu için periyodik güncelleme
   const startHeatmapAnimation = () => {
     let animationFrame;
     let lastTime = 0;
     
-    // Animasyon fonksiyonu
     const animate = (currentTime) => {
       if (!map.current || !mapInitialized) {
         return;
       }
       
-      // Her 2 saniyede bir güncelle (performans için)
       if (currentTime - lastTime > 2000) {
         lastTime = currentTime;
         
-        // Mevcut ısı haritası verilerini al
         const source = map.current.getSource('air-quality-heat');
         if (source) {
           const data = map.current.getSource('air-quality-heat')._data;
@@ -209,13 +196,11 @@ const Map = ({ sensors = [], onSensorClick }) => {
               // Klon özellik ve koordinatları
               const newFeature = {...feature};
               
-              // AQI değerini değiştirmeden aynen koru
               newFeature.properties = {...feature.properties};
               
-              // Sadece koordinatlarda çok küçük değişiklikler yap
               // Bu, ısı haritasının hafifçe dalgalanmasını sağlar
               if (feature.geometry && feature.geometry.type === 'Point') {
-                const tinyLatVariation = (Math.random() * 0.002) - 0.001; // ±0.001 derece
+                const tinyLatVariation = (Math.random() * 0.002) - 0.001;
                 const tinyLngVariation = (Math.random() * 0.002) - 0.001;
                 
                 newFeature.geometry = {
@@ -230,7 +215,6 @@ const Map = ({ sensors = [], onSensorClick }) => {
               return newFeature;
             });
             
-            // Güncellenmiş verileri haritaya uygula
             source.setData({
               type: 'FeatureCollection',
               features: animatedFeatures
@@ -239,20 +223,16 @@ const Map = ({ sensors = [], onSensorClick }) => {
         }
       }
       
-      // Animasyonu devam ettir
       animationFrame = requestAnimationFrame(animate);
     };
     
-    // Animasyonu başlat
     animationFrame = requestAnimationFrame(animate);
     
-    // Temizleme için fonksiyonu döndür
     return () => {
       cancelAnimationFrame(animationFrame);
     };
   };
 
-  // Harita merkezi veya zoom değiştiğinde
   useEffect(() => {
     if (!map.current || !mapInitialized) return;
     
@@ -263,7 +243,6 @@ const Map = ({ sensors = [], onSensorClick }) => {
     });
   }, [center, zoom, mapInitialized]);
 
-  // Isı haritası durumu değiştiğinde çalışır
   useEffect(() => {
     if (!map.current || !mapInitialized) return;
     
@@ -333,7 +312,6 @@ const Map = ({ sensors = [], onSensorClick }) => {
     
     // İstanbul'a veya dünyaya zoom yapıldığında sadece filtreleme yap
     if (mapView === 'istanbul') {
-      // Istanbul yakınlarındaki sensörleri filtrele (yaklaşık sınırlar)
       locationData = locationData.filter(location => 
         location.lat > 40.7 && location.lat < 41.3 && 
         location.lng > 28.5 && location.lng < 29.5
@@ -354,13 +332,12 @@ const Map = ({ sensors = [], onSensorClick }) => {
     let heatmapFeatures = [];
     
     locationData.forEach(location => {
-      // Ana konum merkezi
       heatmapFeatures.push({
         type: 'Feature',
         properties: {
           id: location.name,
           location: location.name,
-          aqi: location.aqi // Ana noktada tam AQI değeri
+          aqi: location.aqi
         },
         geometry: {
           type: 'Point',
@@ -369,8 +346,7 @@ const Map = ({ sensors = [], onSensorClick }) => {
       });
       
       // Konum çevresinde farklı AQI değerlerine sahip noktalar oluşturarak ısı haritasını genişlet
-      // Daha fazla nokta ve daha geniş bir çember
-      const baseRadius = 0.05; // Daha geniş etki alanı (0.03 -> 0.05), yaklaşık 5km
+      const baseRadius = 0.05;
       
       // İki farklı çember oluştur - biri yakın, diğeri daha uzak
       for (let ring = 0; ring < 2; ring++) {
@@ -386,7 +362,6 @@ const Map = ({ sensors = [], onSensorClick }) => {
           const lng_offset = Math.cos(angle) * radius * variationFactor; 
           const lat_offset = Math.sin(angle) * radius * variationFactor;
         
-          // AQI değerini merkeze uzaklığa göre azaltalım
           // İlk halka için daha yüksek değerler, ikinci halka için daha düşük
           let distance_factor;
           if (ring === 0) {
@@ -413,21 +388,19 @@ const Map = ({ sensors = [], onSensorClick }) => {
         }
       }
       
-      // Her konum için AQI değerine göre birkaç ek nokta ekleyelim
-      // Bu, daha yoğun kirliliği olan bölgelerde daha büyük bir ısı etkisi yaratır
-      if (location.aqi > 50) { // Sadece belirli AQI üzerindeki konumlar için
-        const extraPoints = Math.min(10, Math.floor(location.aqi / 20)); // AQI değeri yükseldikçe daha fazla nokta
-        const extraRadius = baseRadius * 0.7; // Ana noktaya yakın
+      if (location.aqi > 50) {
+        const extraPoints = Math.min(10, Math.floor(location.aqi / 20));
+        const extraRadius = baseRadius * 0.7;
         
         for (let i = 0; i < extraPoints; i++) {
-          const angle = Math.random() * Math.PI * 2; // Rastgele açı
-          const dist = Math.random() * extraRadius; // Rastgele mesafe (max extraRadius)
+          const angle = Math.random() * Math.PI * 2;
+          const dist = Math.random() * extraRadius;
           
           const lng_offset = Math.cos(angle) * dist;
           const lat_offset = Math.sin(angle) * dist;
           
           // Bu ekstra noktalar daha yüksek AQI değerine sahip olsun
-          const intensity_factor = 0.9 + Math.random() * 0.2; // 0.9 ile 1.1 arası
+          const intensity_factor = 0.9 + Math.random() * 0.2;
           const extra_aqi = Math.min(300, Math.round(location.aqi * intensity_factor));
           
           heatmapFeatures.push({
