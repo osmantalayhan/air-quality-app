@@ -18,7 +18,7 @@ AirQualityApp, dünya genelinde ve özellikle Türkiye'deki hava kalitesi verile
 - Gerçek zamanlı olarak toplar ve analiz eder
 - Kullanıcı dostu bir arayüzle harita üzerinde görselleştirir
 - Anomali tespiti yaparak tehlikeli hava kalitesi durumlarında uyarılar oluşturur
-- Verileri analiz ederk 24 saatlik tahminler oluşturur.
+- Verileri analiz ederk 24 saatlik tahminler oluşturur
 
 Platform, çeşitli kirletici maddeleri (PM2.5, PM10, NO2, SO2, O3) takip eder ve WHO standartlarına göre tehlikeli seviyeleri belirler.
 
