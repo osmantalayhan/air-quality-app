@@ -341,7 +341,7 @@ Uygulama, Open-Meteo Air Quality API'sini kullanarak gerçek zamanlı hava kalit
 2. Aynı bölgedeki (25km yarıçap) diğer sensörlerden önemli ölçüde farklı değerler
 
 ## Katkıda Bulunanlar
-- Osman Talayhan
+Osman Talayhan
 
 ## İletişim
 Sorularınız veya geri bildirimleriniz için: tlyhnosman@gmail.com 
